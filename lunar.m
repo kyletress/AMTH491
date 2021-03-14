@@ -58,7 +58,21 @@ r_2 = [-Rs*cosd(lambda_0),Rs*sind(lambda_0),0]; % vector from the moon to the sp
 u_r2 = r_2/norm(r_2)
 
 r_1 = r_m + r_2
-norm(r_1) % magnitude of the distance to the patch point from the center of the earth 
+%norm(r_1) % magnitude of the distance to the patch point from the center of the earth 
+% unit vector 
+u_r1 = r_1/norm(r_1);
+
+cosDeltaTheta = dot(u_r0,u_r1);
+sweepAngle = acosd(cosDeltaTheta); % sweep angle 
+
+% Angular momentum of the translunar orbit
+h_1 = sqrt(mu*r_c)*sqrt((1-cosDeltaTheta)/((r_c/norm(r_1))+sind(sweepAngle)*tand(gamma_0)-cosDeltaTheta))
+
+% Lagrange Coefficients (need a refresher on these)
+f = 1 - (mu*norm(r_1)/h_1^2)*(1-cosDeltaTheta);
+g = (norm(r_0)*norm(r_1)/h_1) * sind(sweepAngle);
+g_dot = 1 - (mu*norm(r_0)/h_1^2)*(1-cosDeltaTheta);
+
 
 
     function answer = semiMajorAxis(a, p)
