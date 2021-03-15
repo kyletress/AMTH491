@@ -48,16 +48,16 @@ v_m = [0,v_m,0];
 alpha_0 = 28; % Angular position relative to the Earth-Moon line
 gamma_0 = 6; % flight path angle 
 lambda_0 = 55; % lunar arrival angle 
-r_0 = [-r_c*cosd(alpha_0),-r_c*sind(alpha_0),0] % the position vector of the spacecraft at TLI 
+r_0 = [-r_c*cosd(alpha_0),-r_c*sind(alpha_0),0]; % the position vector of the spacecraft at TLI 
 
 % calculate the unit vector 
 u_r0 = r_0/norm(r_0);
 
 r_2 = [-Rs*cosd(lambda_0),Rs*sind(lambda_0),0]; % vector from the moon to the spacecraft at the patch point
 % calculate the unit vector 
-u_r2 = r_2/norm(r_2)
+u_r2 = r_2/norm(r_2);
 
-r_1 = r_m + r_2
+r_1 = r_m + r_2;
 %norm(r_1) % magnitude of the distance to the patch point from the center of the earth 
 % unit vector 
 u_r1 = r_1/norm(r_1);
@@ -66,14 +66,24 @@ cosDeltaTheta = dot(u_r0,u_r1);
 sweepAngle = acosd(cosDeltaTheta); % sweep angle 
 
 % Angular momentum of the translunar orbit
-h_1 = sqrt(mu*r_c)*sqrt((1-cosDeltaTheta)/((r_c/norm(r_1))+sind(sweepAngle)*tand(gamma_0)-cosDeltaTheta))
+h_1 = sqrt(mu*r_c)*sqrt((1-cosDeltaTheta)/((r_c/norm(r_1))+sind(sweepAngle)*tand(gamma_0)-cosDeltaTheta));
 
 % Lagrange Coefficients (need a refresher on these)
 f = 1 - (mu*norm(r_1)/h_1^2)*(1-cosDeltaTheta);
 g = (norm(r_0)*norm(r_1)/h_1) * sind(sweepAngle);
 g_dot = 1 - (mu*norm(r_0)/h_1^2)*(1-cosDeltaTheta);
 
+% spacecraft velocities  at the beginning and end of the geocentric
+% departure trajectory 
+v_0 = (1/g) * (r_1-f*r_0);
+%norm(v_0);
+v_r0 = dot(v_0, u_r0);
+v_1 = (1/g) * (g_dot*r_1-r_0);
 
+% The eccentricity vector
+e_1 = (1/mu)*((norm(v_0)^2-(mu/norm(r_0)))*r_0-norm(r_0)*norm(v_r0)*v_0);
+norm(e_1); % whew. 
+% Perifocal unit vectors of the elliptical translunar trajectory
 
     function answer = semiMajorAxis(a, p)
         % This function calculates the semimajor axis given the periapsis
