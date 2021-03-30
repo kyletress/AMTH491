@@ -217,7 +217,7 @@ s2 = char(date);
 fprintf(strcat(s2,'\n'));
 fprintf(' Altitude at TLI:               %0.2f km\n', norm(r0));
 fprintf(' Right Ascension:               %2.4f degrees\n', rightAscension);
-fprintf(' Declination:                   %2.4f hours\n', declination);
+fprintf(' Declination:                   %2.4f degrees\n', declination);
 fprintf(' Arrival Angle:                 %2.2f degrees\n', lambda);
 fprintf(' Flight Path Angle:             %2.2f degrees\n', flightPathAngle);
 fprintf(' ------------------\n');
