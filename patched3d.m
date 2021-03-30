@@ -2,6 +2,8 @@
 % AMTH 491 Senior Project
 % Adapted from Orbital Mechanics for Engineering Students 
 
+clc;
+
 % Physical constants
 Rs = 66183; % moon sphere of influence
 Rm = 1737; % radius of the Moon in km
@@ -190,7 +192,7 @@ r_rel = (norm(h2)^2/muMoon)*(1/(1+norm(e2)*cosd(theta)))*(cos(theta)*p2m + (sin(
 v_rel = ((-muMoon/norm(h2))*sind(theta)*p2m) + (muMoon/norm(h2))*(norm(e2)+cosd(theta))*q2m;
 
 % 8. Relative position and velocity vectors in the geocentric XYZ frame 
-rXYZ = Q_new'*r_rel
+rXYZ = Q_new'*r_rel;
 vXYZ = Q_new'*v_rel;
 
 % 9. Absolute position and velocity vectors in the XYZ frame 
@@ -203,8 +205,6 @@ norm(v_abs); % = vm + cross(wm,r) + v'
 % Part IV - Determine the spacecraft's geocentric orbit upon departing the
 % SOI after lunar flyby
 
-
-
 % Part V - Output 
 fprintf(' OUTPUT\n\n');
 fprintf(' Initial Conditions\n');
@@ -215,13 +215,17 @@ s1 = char(date);
 date.Format = 'uuuu-MM-dd''T''HH:mm:ss';
 s2 = char(date);
 fprintf(strcat(s2,'\n'));
-fprintf(' Altitude at TLI: %0.2f km\n', norm(r0));
-fprintf(' Right Ascension: %2.4f degrees\n', rightAscension);
-fprintf(' Declination: %2.4f hours\n', declination);
-fprintf(' Arrival Angle: %2.2f degrees\n', lambda);
-fprintf(' Flight Path Angle: %2.2f degrees\n\n', flightPathAngle);
-
-fprintf(' Flight Time: %0.4f hours\n',flightTime);
-fprintf(' Sweep Angle: %0.4f degrees\n', sweepAngle);
-fprintf(' True Anomoly at TLI: %0.4f degrees\n', trueAnomoly);
-fprintf(' Perilune Radius (hyperbolic): %0.2f km\n', zp2);
+fprintf(' Altitude at TLI:               %0.2f km\n', norm(r0));
+fprintf(' Right Ascension:               %2.4f degrees\n', rightAscension);
+fprintf(' Declination:                   %2.4f hours\n', declination);
+fprintf(' Arrival Angle:                 %2.2f degrees\n', lambda);
+fprintf(' Flight Path Angle:             %2.2f degrees\n', flightPathAngle);
+fprintf(' ------------------\n');
+fprintf(' Flight Time:                   %0.4f hours\n',flightTime);
+fprintf(' Sweep Angle:                   %0.4f degrees\n', sweepAngle);
+fprintf(' True Anomoly at TLI:           %0.4f degrees\n', trueAnomoly);
+fprintf(' Velocity at patch point:       %0.4f km/s\n', norm(v2));
+fprintf(' Perilune Altitude:             %0.2f km\n', zp2);
+fprintf(' Time from patch to perilune:   %0.4f hours\n',-t2/3600);
+fprintf(' Phase angle at departure:      %0.2f degrees\n', rad2deg(angularVelocityMoon*flightTime*3600));
+            
