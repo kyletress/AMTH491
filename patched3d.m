@@ -169,7 +169,10 @@ j = cross(k,i);
 
 % 4. Calculate the cosine direction matrix of the transformation to XYZ,
 % geocentric equatorial frame 
-Q = [i(1) i(2) i(3); j(1) j(2) j(3); k(1) k(2) k(3)];
+% Confused here. The book uses the OLD transformation matrix, so I've
+% renamed the updated matrix below to ensure I implemented the
+% rest of algorithm correctly. 
+Q_new = [i(1) i(2) i(3); j(1) j(2) j(3); k(1) k(2) k(3)];
 
 % 5. Perifocal unit vectors in the rotation xyz frame 
 p2m = Q*p2';
@@ -182,9 +185,19 @@ theta = 0;
 
 % 7. The position and velocity vectors of the spacecraft relative to the
 % moon fixed xyz frame 
-r = (norm(h2)^2/muMoon)*(1/(1+norm(e2)*cosd(theta)))*(cos(theta)*p2m + (sin(theta)*q2m));
-v = ((-muMoon/norm(h2))*sind(theta)*p2m) + (muMoon/norm(h2))*(norm(e2)+cosd(theta))*q2m;
+r_rel = (norm(h2)^2/muMoon)*(1/(1+norm(e2)*cosd(theta)))*(cos(theta)*p2m + (sin(theta)*q2m));
+v_rel = ((-muMoon/norm(h2))*sind(theta)*p2m) + (muMoon/norm(h2))*(norm(e2)+cosd(theta))*q2m;
 
-% Relative position and velocity vectors in the geocentric XYZ frame 
-rXYZ = Q'*r;
-vXYZ = Q'*v;
+% 8. Relative position and velocity vectors in the geocentric XYZ frame 
+rXYZ = Q_new'*r_rel
+vXYZ = Q_new'*v_rel;
+
+% 9. Absolute position and velocity vectors in the XYZ frame 
+r_abs = rm + rXYZ'
+norm(r_abs)
+
+v_abs = vm + cross(wm,rXYZ') + vXYZ';
+norm(v_abs); % = vm + cross(wm,r) + v'
+
+% Part IV - Determine the spacecraft's geocentric orbit upon departing the
+% SOI after lunar flyby
