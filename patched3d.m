@@ -8,8 +8,9 @@ Rm = 1737; % radius of the Moon in km
 muEarth = 398600; % Earth gravitational parameter
 muMoon = 4902.8; % Moon gravitational parameter 
 
-% Independent Variables 
-t = juliandate(datetime('2020-05-04 12:00:00'));
+% Independent Variables
+date = datetime('2020-05-04 12:00:00');
+t = juliandate(date);
 lambda = 50; % arrival angle 
 r0 = 6698; % radius 
 rightAscension = 40; % at TLI
@@ -193,11 +194,34 @@ rXYZ = Q_new'*r_rel
 vXYZ = Q_new'*v_rel;
 
 % 9. Absolute position and velocity vectors in the XYZ frame 
-r_abs = rm + rXYZ'
-norm(r_abs)
+r_abs = rm + rXYZ';
+norm(r_abs);
 
 v_abs = vm + cross(wm,rXYZ') + vXYZ';
 norm(v_abs); % = vm + cross(wm,r) + v'
 
 % Part IV - Determine the spacecraft's geocentric orbit upon departing the
 % SOI after lunar flyby
+
+
+
+% Part V - Output 
+fprintf(' OUTPUT\n\n');
+fprintf(' Initial Conditions\n');
+fprintf(' ------------------\n');
+fprintf(' Time at Lunar SOI patch point: ');
+% some date formatting
+s1 = char(date);
+date.Format = 'uuuu-MM-dd''T''HH:mm:ss';
+s2 = char(date);
+fprintf(strcat(s2,'\n'));
+fprintf(' Altitude at TLI: %0.2f km\n', norm(r0));
+fprintf(' Right Ascension: %2.4f degrees\n', rightAscension);
+fprintf(' Declination: %2.4f hours\n', declination);
+fprintf(' Arrival Angle: %2.2f degrees\n', lambda);
+fprintf(' Flight Path Angle: %2.2f degrees\n\n', flightPathAngle);
+
+fprintf(' Flight Time: %0.4f hours\n',flightTime);
+fprintf(' Sweep Angle: %0.4f degrees\n', sweepAngle);
+fprintf(' True Anomoly at TLI: %0.4f degrees\n', trueAnomoly);
+fprintf(' Perilune Radius (hyperbolic): %0.2f km\n', zp2);
