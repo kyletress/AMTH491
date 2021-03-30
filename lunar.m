@@ -8,7 +8,7 @@ moon_apoapsis = 405500;
 moon_periapsis = 363400;
 semiMajorAxisMoon = semiMajorAxis(moon_periapsis,moon_apoapsis); % the semimajor axis of the moon
 D = semiMajorAxisMoon; % Simplifying assumption, the moon is in a circular orbit around the earth with diameter D
-mu = 398600; % Earth gravitational parameter 
+mu = 398600; % Earth gravitational parametermu = 398600; % Earth gravitational parametermu = 398600; % Earth gravitational parameter 
 v_m = orbitalSpeed(mu,semiMajorAxisMoon); % orbital speed of the moon
 alt = 320; % the altitude of the spacecraft 
 earthRadius = 6378; % radius of the Earth in km 

@@ -143,6 +143,48 @@ F = 2*atanh(sqrt((norm(e2)-1)/(norm(e2)+1))*tan(deg2rad(theta2)/2));
 meanAnomolyHyperbola = norm(e2)*sinh(F)-F;
 t2 = meanAnomolyHyperbola * norm(h2)^3/(muMoon^2*(norm(e2)^2-1)^(3/2));
 
+% Part III
+% Evaluate the spacecraft's geocentric equatorial position and velocity
+% vectors at any time t 
 
+% 1. Calculate the moon's position at t using the ephemeris 
+% choose perilune for convenience, so t = 0. This occurs after 0 - t2
+% as calculated above
 
+t = (0 - t2); % in seconds. Perilune is hardcoded here.  
+% convert to julian for the ephemeris 
+t = juliandate(datetime('2020-05-04 12:00:00')+seconds(t));
 
+% Moon geocentric equatorial state vector from ephemeris
+[rm,vm] = planetEphemeris(t, 'Earth','Moon');
+
+% 2. Angular velocity of the moon 
+wm = cross(rm, vm)/norm(rm)^2;
+
+% 3. Calculate unit vectors directed along xyz, the rotating moon-fixed
+% frame, at the moment the spacecraft is at perilune 
+i = rm/norm(rm);
+k = wm/norm(wm);
+j = cross(k,i);
+
+% 4. Calculate the cosine direction matrix of the transformation to XYZ,
+% geocentric equatorial frame 
+Q = [i(1) i(2) i(3); j(1) j(2) j(3); k(1) k(2) k(3)];
+
+% 5. Perifocal unit vectors in the rotation xyz frame 
+p2m = Q*p2';
+q2m = Q*q2';
+
+% 6. since t = 0, we know that (HARDCODED, fix)
+M = 0; 
+F = 0;
+theta = 0;
+
+% 7. The position and velocity vectors of the spacecraft relative to the
+% moon fixed xyz frame 
+r = (norm(h2)^2/muMoon)*(1/(1+norm(e2)*cosd(theta)))*(cos(theta)*p2m + (sin(theta)*q2m));
+v = ((-muMoon/norm(h2))*sind(theta)*p2m) + (muMoon/norm(h2))*(norm(e2)+cosd(theta))*q2m;
+
+% Relative position and velocity vectors in the geocentric XYZ frame 
+rXYZ = Q'*r;
+vXYZ = Q'*v;
